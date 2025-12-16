@@ -1,36 +1,228 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔐 Next.js Auth Template
 
-## Getting Started
+Production-ready authentication starter with Better Auth, OAuth providers, and email verification. Built with Next.js 15, Radix UI, and Drizzle ORM.
 
-First, run the development server:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=YOUR_REPO_URL)
 
+## ✨ Features
+
+<div align="center">
+
+| 🔐 Authentication | 👤 User Management | 📧 Email System |
+|-------------------|-------------------|-----------------|
+| OAuth (Google, GitHub) | Profile with avatars | Email verification |
+| Email/Password | Secure sessions | Magic link login |
+| Session management | Multiple auth providers | Password reset |
+
+</div>
+
+### What's Included
+
+✅ **Multiple sign-in methods** - Email/password, Google OAuth, GitHub OAuth  
+✅ **Email verification** - Powered by Resend  
+✅ **Session management** - Token-based with device tracking  
+✅ **Password reset flow** - Secure token-based reset  
+✅ **Profile management** - Update name, email, profile picture  
+✅ **Type-safe** - Full TypeScript + Drizzle ORM  
+✅ **Modern UI** - Radix UI components + Tailwind CSS  
+✅ **Production-ready** - Error handling, validation, security best practices
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL database (or use [Neon](https://neon.tech) for free)
+- pnpm (or npm/yarn)
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+   git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   cd YOUR_REPO_NAME
+   pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Set up environment variables**
+   
+   Create a `.env.local` file in the root directory:
+```env
+   # Database
+   DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+   
+   # Better Auth
+   BETTER_AUTH_SECRET="run: openssl rand -base64 32"
+   NEXT_PUBLIC_APP_URL="http://localhost:3000"
+   
+   # Google OAuth (optional)
+   GOOGLE_CLIENT_ID="your-google-client-id"
+   GOOGLE_CLIENT_SECRET="your-google-client-secret"
+   
+   # GitHub OAuth (optional)
+   GITHUB_CLIENT_ID="your-github-client-id"
+   GITHUB_CLIENT_SECRET="your-github-client-secret"
+   
+   # Resend (for emails)
+   RESEND_API_KEY="your-resend-api-key"
+   EMAIL_FROM="your-registered-domain-email-in-resend"
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Run database migrations**
+```bash
+   pnpm db:generate
+   pnpm db:migrate
+   pnpm db:push
+   pnpm db:studio
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Start the development server**
+```bash
+   pnpm dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) 🎉
 
-To learn more about Next.js, take a look at the following resources:
+## 🔧 Configuration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Google OAuth Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a new project or select existing one
+3. Navigate to **APIs & Services** → **Credentials**
+4. Click **Create Credentials** → **OAuth client ID**
+5. Choose **Web application**
+6. Add authorized redirect URI:
+```
+   http://localhost:3000/api/auth/callback/google
+```
+7. Copy **Client ID** and **Client Secret** to `.env.local`
 
-## Deploy on Vercel
+### GitHub OAuth Setup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
+2. Click **New OAuth App**
+3. Fill in the details:
+   - **Application name**: Your app name
+   - **Homepage URL**: `http://localhost:3000`
+   - **Authorization callback URL**: `http://localhost:3000/api/auth/callback/github`
+4. Click **Register application**
+5. Generate a **Client Secret**
+6. Copy **Client ID** and **Client Secret** to `.env.local`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Resend Setup
+
+1. Sign up at [Resend](https://resend.com)
+2. Get your API key from the dashboard
+3. Add it to `.env.local`
+4. (Optional) Verify your domain for production emails
+
+## 🏗️ Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org)
+- **Authentication**: [Better Auth](https://better-auth.com)
+- **Database**: [PostgreSQL](https://www.postgresql.org) + [Drizzle ORM](https://orm.drizzle.team)
+- **UI Components**: [Radix UI](https://www.radix-ui.com)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com)
+- **Email**: [Resend](https://resend.com)
+- **Deployment**: [Vercel](https://vercel.com)
+
+## 📊 Database Schema
+
+<details>
+<summary>View ER Diagram</summary>
+```mermaid
+erDiagram
+    USER ||--o{ SESSION : "has many"
+    USER ||--o{ ACCOUNT : "has many"
+    USER }o..o{ VERIFICATION : "verifies via identifier"
+
+    USER {
+        text id PK
+        text email UK "unique"
+        text name
+        text image "profile pic"
+        boolean email_verified
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    SESSION {
+        text id PK
+        text user_id FK "CASCADE delete"
+        text token UK "unique session token"
+        timestamp expires_at "when session expires"
+        text ip_address "optional tracking"
+        text user_agent "browser info"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ACCOUNT {
+        text id PK
+        text user_id FK "CASCADE delete"
+        text provider_id "google/github/credential"
+        text account_id "ID from provider"
+        text access_token "OAuth token"
+        text refresh_token "OAuth refresh"
+        text id_token "OpenID token"
+        timestamp access_token_expires_at
+        timestamp refresh_token_expires_at
+        text scope "OAuth permissions"
+        text password "for email/pass auth"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    VERIFICATION {
+        text id PK
+        text identifier "email/phone"
+        text value "verification code/token"
+        timestamp expires_at "token expiry"
+        timestamp created_at
+        timestamp updated_at
+    }
+```
+
+### Table Overview
+
+- **USER** - Core user profiles (email, name, profile picture)
+- **SESSION** - Active login sessions with device tracking
+- **ACCOUNT** - OAuth connections (Google, GitHub) + password storage
+- **VERIFICATION** - Temporary tokens for email verification, magic links, password resets
+
+</details>
+
+
+**Important:** 
+- Update OAuth redirect URIs in Google/GitHub to your production URL
+- Use a different `NEXT_PUBLIC_APP_URL` for production
+
+## 🔒 Security Features
+
+✅ **Password hashing** - Bcrypt with proper salting  
+✅ **CSRF protection** - Built into Better Auth  
+✅ **Session tokens** - Secure, revocable tokens instead of JWT  
+✅ **Email verification** - Required before full access  
+✅ **Rate limiting** - Built-in protection against brute force  
+✅ **Secure cookies** - HttpOnly, Secure, SameSite flags
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
+
+MIT License - feel free to use this template for your projects!
+
+## 🙏 Acknowledgments
+
+- [Better Auth](https://better-auth.com) for the authentication library
+- [Radix UI](https://www.radix-ui.com) for accessible components
+- [shadcn/ui](https://ui.shadcn.com) for component inspiration
+
+---
+
+
+**Need help?** [Open an issue](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/issues)
