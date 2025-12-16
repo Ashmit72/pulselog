@@ -243,7 +243,7 @@ export default function SignInPage() {
         <div className="w-100 hidden lg:block">
           <Image
             className="h-full w-full rounded-r-2xl"
-            src="/signin-01/bg.png"
+            src="/signin/bg.png"
             alt="Background Image"
             width={400}
             height={400}
