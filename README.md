@@ -53,7 +53,7 @@ Production-ready authentication starter with Better Auth, OAuth providers, and e
    
    # Better Auth
    BETTER_AUTH_SECRET="run: openssl rand -base64 32"
-   BETTER_AUTH_URL="http://localhost:3000"
+   NEXT_PUBLIC_APP_URL="http://localhost:3000"
    
    # Google OAuth (optional)
    GOOGLE_CLIENT_ID="your-google-client-id"
@@ -65,11 +65,15 @@ Production-ready authentication starter with Better Auth, OAuth providers, and e
    
    # Resend (for emails)
    RESEND_API_KEY="your-resend-api-key"
+   EMAIL_FROM="your-registered-domain-email-in-resend"
 ```
 
 3. **Run database migrations**
 ```bash
+   pnpm db:generate
+   pnpm db:migrate
    pnpm db:push
+   pnpm db:studio
 ```
 
 4. **Start the development server**
@@ -190,57 +194,10 @@ erDiagram
 
 </details>
 
-## 📁 Project Structure
-```
-├── app/
-│   ├── (auth)/              # Authentication pages
-│   │   ├── login/
-│   │   ├── register/
-│   │   └── verify-email/
-│   ├── (dashboard)/         # Protected routes
-│   │   ├── dashboard/
-│   │   └── profile/
-│   ├── api/
-│   │   └── auth/[...all]/   # Better Auth API routes
-│   └── layout.tsx
-├── components/
-│   ├── ui/                  # Radix UI components
-│   └── auth/                # Auth-specific components
-├── lib/
-│   ├── auth.ts              # Better Auth configuration
-│   ├── db.ts                # Database connection
-│   └── schema.ts            # Drizzle schema
-└── drizzle.config.ts
-```
-
-## 🚢 Deployment
-
-### Deploy to Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Import your repository on [Vercel](https://vercel.com)
-3. Add environment variables:
-   - Update `BETTER_AUTH_URL` to your production URL
-   - Add all OAuth credentials
-   - Add `RESEND_API_KEY`
-   - Add `DATABASE_URL`
-4. Deploy!
-
-### Environment Variables for Production
-```env
-DATABASE_URL="your-production-db-url"
-BETTER_AUTH_SECRET="generate-new-secret-for-production"
-BETTER_AUTH_URL="https://your-domain.com"
-GOOGLE_CLIENT_ID="..."
-GOOGLE_CLIENT_SECRET="..."
-GITHUB_CLIENT_ID="..."
-GITHUB_CLIENT_SECRET="..."
-RESEND_API_KEY="..."
-```
 
 **Important:** 
 - Update OAuth redirect URIs in Google/GitHub to your production URL
-- Use a different `BETTER_AUTH_SECRET` for production
+- Use a different `NEXT_PUBLIC_APP_URL` for production
 
 ## 🔒 Security Features
 
@@ -267,6 +224,5 @@ MIT License - feel free to use this template for your projects!
 
 ---
 
-Built with ❤️ by [Your Name](https://github.com/YOUR_USERNAME)
 
 **Need help?** [Open an issue](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/issues)
