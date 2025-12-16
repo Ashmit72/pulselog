@@ -132,58 +132,9 @@ Open [http://localhost:3000](http://localhost:3000) 🎉
 
 <details>
 <summary>View ER Diagram</summary>
-```mermaid
-erDiagram
-    USER ||--o{ SESSION : "has many"
-    USER ||--o{ ACCOUNT : "has many"
-    USER }o..o{ VERIFICATION : "verifies via identifier"
 
-    USER {
-        text id PK
-        text email UK "unique"
-        text name
-        text image "profile pic"
-        boolean email_verified
-        timestamp created_at
-        timestamp updated_at
-    }
+![Preview](public/er.png)
 
-    SESSION {
-        text id PK
-        text user_id FK "CASCADE delete"
-        text token UK "unique session token"
-        timestamp expires_at "when session expires"
-        text ip_address "optional tracking"
-        text user_agent "browser info"
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    ACCOUNT {
-        text id PK
-        text user_id FK "CASCADE delete"
-        text provider_id "google/github/credential"
-        text account_id "ID from provider"
-        text access_token "OAuth token"
-        text refresh_token "OAuth refresh"
-        text id_token "OpenID token"
-        timestamp access_token_expires_at
-        timestamp refresh_token_expires_at
-        text scope "OAuth permissions"
-        text password "for email/pass auth"
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    VERIFICATION {
-        text id PK
-        text identifier "email/phone"
-        text value "verification code/token"
-        timestamp expires_at "token expiry"
-        timestamp created_at
-        timestamp updated_at
-    }
-```
 
 ### Table Overview
 
@@ -224,5 +175,3 @@ MIT License - feel free to use this template for your projects!
 
 ---
 
-
-**Need help?** [Open an issue](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/issues)
