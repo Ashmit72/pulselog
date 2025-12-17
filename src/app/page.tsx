@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 const page = () => {
   return (
-    <div className='flex flex-col gap-6 items-center justify-center h-screen overflow-y-auto' >
+    <div className='flex flex-col gap-6 items-center justify-center h-svh overflow-y-auto py-8' >
       <section  className='flex items-center justify-center gap-6' >
       <h1 className='heading-2' >ER Diagram for Auth Standard</h1>
         <Button asChild variant="glossy-inverted" color='info' size="48" >
