@@ -40,7 +40,7 @@ Production-ready authentication starter with Better Auth, OAuth providers, and e
 1. **Clone the repository**
 ```bash
    git clone https://github.com/Radian-os/radian-auth-template.git
-   cd Radian-os
+   cd radian-auth-template
    pnpm install
 ```
 
