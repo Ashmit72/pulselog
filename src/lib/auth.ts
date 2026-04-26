@@ -3,9 +3,28 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function createEmailTransport() {
+  const port = Number(process.env.SMTP_PORT ?? 587);
+
+  if (Number.isNaN(port)) {
+    throw new Error("SMTP_PORT must be a valid number");
+  }
+
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port,
+    secure: process.env.SMTP_SECURE === "true" || port === 465,
+    auth:
+      process.env.SMTP_USER && process.env.SMTP_PASS
+        ? {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          }
+        : undefined,
+  });
+}
 
 /* =========================
    EMAIL SENDER WITH PROPER ERROR HANDLING
@@ -22,13 +41,13 @@ export async function sendEmail({
   // Log in development
   // console.log(`📧 Attempting to send: ${subject} -> ${to}`);
 
-  if (!process.env.RESEND_API_KEY) {
-    // console.log(`⚠️ DEV MODE (no RESEND_API_KEY):\n${html}`);
+  if (!process.env.SMTP_HOST) {
+    // console.log(`⚠️ DEV MODE (no SMTP_HOST):\n${html}`);
     return;
   }
 
   try {
-    const result = await resend.emails.send({
+    const result = await createEmailTransport().sendMail({
       from: `RadianOS <${process.env.EMAIL_FROM}>`,
       to,
       subject,

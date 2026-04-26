@@ -19,7 +19,7 @@ Production-ready authentication starter with Better Auth, OAuth providers, and e
 ### What's Included
 
 ✅ **Multiple sign-in methods** - Email/password, Google OAuth, GitHub OAuth  
-✅ **Email verification** - Powered by Resend  
+✅ **Email verification** - Powered by Nodemailer<br>
 ✅ **Session management** - Token-based with device tracking  
 ✅ **Password reset flow** - Secure token-based reset  
 ✅ **Profile management** - Update name, email, profile picture  
@@ -63,9 +63,13 @@ Production-ready authentication starter with Better Auth, OAuth providers, and e
    GITHUB_CLIENT_ID="your-github-client-id"
    GITHUB_CLIENT_SECRET="your-github-client-secret"
    
-   # Resend (for emails)
-   RESEND_API_KEY="your-resend-api-key"
-   EMAIL_FROM="your-registered-domain-email-in-resend"
+   # SMTP (for emails with Nodemailer)
+   SMTP_HOST="smtp.example.com"
+   SMTP_PORT="587"
+   SMTP_SECURE="false"
+   SMTP_USER="your-smtp-username"
+   SMTP_PASS="your-smtp-password"
+   EMAIL_FROM="noreply@example.com"
 ```
 
 3. **Run database migrations**
@@ -110,12 +114,12 @@ Open [http://localhost:3000](http://localhost:3000) 🎉
 5. Generate a **Client Secret**
 6. Copy **Client ID** and **Client Secret** to `.env.local`
 
-### Resend Setup
+### Nodemailer SMTP Setup
 
-1. Sign up at [Resend](https://resend.com)
-2. Get your API key from the dashboard
-3. Add it to `.env.local`
-4. (Optional) Verify your domain for production emails
+1. Get SMTP credentials from your email provider
+2. Add `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, and `EMAIL_FROM` to `.env.local`
+3. Use `SMTP_SECURE="true"` for port `465`; use `SMTP_SECURE="false"` for ports like `587`
+4. Make sure `EMAIL_FROM` is allowed by your SMTP provider
 
 ## 🏗️ Tech Stack
 
@@ -125,7 +129,7 @@ Open [http://localhost:3000](http://localhost:3000) 🎉
 - **Database**: [PostgreSQL](https://www.postgresql.org) + [Drizzle ORM](https://orm.drizzle.team)
 - **UI Components**: [Radix UI](https://www.radix-ui.com)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com)
-- **Email**: [Resend](https://resend.com)
+- **Email**: [Nodemailer](https://nodemailer.com)
 - **Deployment**: [Vercel](https://vercel.com)
 
 ## 📊 Database Schema
@@ -174,4 +178,3 @@ MIT License - feel free to use this template for your projects!
 - [shadcn/ui](https://ui.shadcn.com) for component inspiration
 
 ---
-
