@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
 export const metadata: Metadata = {
-  title: "Radian Auth Template",
+  title: "Auth Template",
   description: "Powered by RadianOS & Better Auth",
 };
 
