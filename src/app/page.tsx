@@ -1,3 +1,4 @@
+import { ThemeToggler } from '@/components/theme-toggler'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -13,8 +14,9 @@ const page = () => {
           See the Demo
           </Link>
           </Button>
+          <ThemeToggler/>
       </section>
-      <Image alt='ER Diagram' height={1500} width={1200} src="/er.png" />
+      <Image alt='ER Diagram' height={1500} className='dark:invert' width={1200} src="/er.png" />
     </div>
   )
 }
