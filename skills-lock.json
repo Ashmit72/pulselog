@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "radian": {
+      "source": "Radian-OS/radianui",
+      "sourceType": "github",
+      "skillPath": "skills/radian/SKILL.md",
+      "computedHash": "79a8f611b9f944571cc85562404e9726f40ca5e6ca408a7010fa6c0e73613e39"
+    }
+  }
+}

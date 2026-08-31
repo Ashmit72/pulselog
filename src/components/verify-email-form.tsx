@@ -39,11 +39,12 @@ export default function VerifyEmailForm() {
         if (session?.data?.user?.emailVerified) {
           router.push("/dashboard");
         }
-      } catch (err: any) {
-        if (err.message.includes("Verification email isn't enabled")) {
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Failed to check verification";
+        if (message.includes("Verification email isn't enabled")) {
           setVerificationEnabled(false);
         } else {
-          setError(err.message || "Failed to check verification");
+          setError(message);
         }
       } finally {
         setChecking(false);

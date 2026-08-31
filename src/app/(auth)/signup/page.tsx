@@ -118,7 +118,7 @@ export default function SignUpPage() {
 
       // Already verified or email verification disabled
       router.push("/dashboard");
-    } catch (err) {
+    } catch {
       form.setError("root", {
         message: "Something went wrong. Please try again.",
       });

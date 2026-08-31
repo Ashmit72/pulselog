@@ -8,6 +8,13 @@
       "when": 1765856175769,
       "tag": "0000_ancient_malice",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788191141653,
+      "tag": "0001_big_sugar_man",
+      "breakpoints": true
     }
   ]
 }

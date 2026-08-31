@@ -1,35 +1,35 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useSyncExternalStore } from "react"
 import { Loader2, MoonIcon, SunIcon } from "lucide-react"
 import { useTheme } from "next-themes"
-import { Button, IconButton } from "@/components/ui/button"
+import { IconButton } from "@/components/ui/button"
+
+const emptySubscribe = () => () => undefined
 
 export function ThemeToggler() {
-	// This component is only rendered on the client, so we can use useEffect to set the mounted state
-	// and avoid server-side rendering issues with the theme provider
-	const [mounted, setMounted] = useState(false)
+	const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
 	const { resolvedTheme, setTheme } = useTheme()
 
 	const toggleTheme = () => {
 		setTheme(resolvedTheme === "light" ? "dark" : "light")
 	}
 
-	// useEffect only runs on the client, so now we can safely show the UI
-	useEffect(() => {
-		setMounted(true)
-	}, [])
-
 	if (!mounted) {
 		return (
-			<IconButton variant="outline" color="neutral" disabled>
+			<IconButton aria-label="Loading color theme" variant="outline" color="neutral" disabled>
 				<Loader2 className="size-5 animate-spin" />
 			</IconButton>
 		)
 	}
 
 	return (
-		<IconButton variant="outline" color="neutral" onClick={toggleTheme}>
+		<IconButton
+			aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} theme`}
+			title={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} theme`}
+			variant="outline"
+			color="neutral"
+			onClick={toggleTheme}>
 			{resolvedTheme === "light" ? <MoonIcon /> : <SunIcon />}
 		</IconButton>
 	)

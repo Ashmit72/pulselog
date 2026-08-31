@@ -1,9 +1,5 @@
-const page = () => {
-  return (
-    <div>
-      Dashboard Page
-    </div>
-  )
-}
+import { DashboardShell } from "@/components/dashboard-shell"
 
-export default page
+export default function DashboardPage() {
+  return <DashboardShell />
+}

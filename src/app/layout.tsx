@@ -2,29 +2,32 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+
 export const metadata: Metadata = {
-  title: "Auth Template",
-  description: "Powered by RadianOS & Better Auth",
+  title: {
+    default: "PulseLog",
+    template: "%s · PulseLog",
+  },
+  description: "Developer-first API observability and error tracking.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className="antialiased"
-      >
+      <body className="min-h-svh antialiased">
         <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
         >
-        {children}
+          {children}
+          <Toaster richColors position="bottom-right" />
         </ThemeProvider>
-          <Toaster />
       </body>
     </html>
   );

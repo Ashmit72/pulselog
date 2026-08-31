@@ -112,8 +112,8 @@ export default function ResetPasswordForm() {
 
       toast.success("Password reset successfully!");
       router.push("/signin");
-    } catch (err: any) {
-      toast.error(err?.message || "Failed to reset password");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to reset password");
     } finally {
       setIsLoading(false);
     }

@@ -4,11 +4,15 @@ import {
   timestamp,
   boolean,
   index,
+  uuid,
+  varchar,
+  integer,
+  jsonb,
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 
 /* =========================
-   USER (Better Auth expects singular)
+   USER & AUTH (Better Auth)
 ========================= */
 export const user = pgTable(
   'user',
@@ -26,9 +30,6 @@ export const user = pgTable(
   })
 );
 
-/* =========================
-   SESSION
-========================= */
 export const session = pgTable(
   'session',
   {
@@ -49,9 +50,6 @@ export const session = pgTable(
   })
 );
 
-/* =========================
-   ACCOUNT (OAuth)
-========================= */
 export const account = pgTable(
   'account',
   {
@@ -76,9 +74,6 @@ export const account = pgTable(
   })
 );
 
-/* =========================
-   VERIFICATION (magic links, email verification)
-========================= */
 export const verification = pgTable('verification', {
   id: text('id').primaryKey(),
   identifier: text('identifier').notNull(),
@@ -88,12 +83,85 @@ export const verification = pgTable('verification', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+
+/* =========================
+   PULSELOG: CORE ENGINE
+========================= */
+
+export const workspace = pgTable(
+  'workspace',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: varchar('name', { length: 255 }).notNull(),
+    // Link the workspace to the user who created it
+    ownerId: text('owner_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    ownerIdx: index('workspace_owner_id_idx').on(table.ownerId),
+  })
+);
+
+export const apiKey = pgTable(
+  'api_key',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    workspaceId: uuid('workspace_id')
+      .notNull()
+      .references(() => workspace.id, { onDelete: 'cascade' }),
+    name: varchar('name', { length: 255 }).notNull(),
+    keyHash: varchar('key_hash', { length: 64 }).unique().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    workspaceIdx: index('api_key_workspace_id_idx').on(table.workspaceId),
+  })
+);
+
+export const event = pgTable(
+  'event',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    workspaceId: uuid('workspace_id')
+      .notNull()
+      .references(() => workspace.id, { onDelete: 'cascade' }),
+    serviceName: varchar('service_name', { length: 255 }).notNull(),
+    route: varchar('route', { length: 255 }).notNull(),
+    statusCode: integer('status_code').notNull(),
+    durationMs: integer('duration_ms').notNull(),
+    errorMessage: text('error_message'),
+    metadata: jsonb('metadata').default({}).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    // Optimized for the dashboard's main time-series chart filters
+    serviceStatusTimeIdx: index('idx_event_service_status_time').on(
+      table.workspaceId,
+      table.serviceName,
+      table.statusCode,
+      table.createdAt
+    ),
+    // Optimized for raw chronological log feeds
+    timeIdx: index('idx_event_created_at').on(table.workspaceId, table.createdAt),
+    // GIN index for fast partial text searches inside the JSON payload
+    metadataGinIdx: index('idx_event_metadata_gin').using(
+      'gin',
+      sql`${table.metadata} jsonb_path_ops`
+    ),
+  })
+);
+
+
 /* =========================
    RELATIONS
 ========================= */
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  workspaces: many(workspace), // A user can own multiple workspaces
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -107,5 +175,28 @@ export const accountRelations = relations(account, ({ one }) => ({
   user: one(user, {
     fields: [account.userId],
     references: [user.id],
+  }),
+}));
+
+export const workspaceRelations = relations(workspace, ({ one, many }) => ({
+  owner: one(user, {
+    fields: [workspace.ownerId],
+    references: [user.id],
+  }),
+  apiKeys: many(apiKey),
+  events: many(event),
+}));
+
+export const apiKeyRelations = relations(apiKey, ({ one }) => ({
+  workspace: one(workspace, {
+    fields: [apiKey.workspaceId],
+    references: [workspace.id],
+  }),
+}));
+
+export const eventRelations = relations(event, ({ one }) => ({
+  workspace: one(workspace, {
+    fields: [event.workspaceId],
+    references: [workspace.id],
   }),
 }));

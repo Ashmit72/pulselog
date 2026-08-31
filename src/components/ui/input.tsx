@@ -2,13 +2,17 @@ import * as React from "react"
 import { type VariantProps, cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-export type InputProps = Omit<React.ComponentProps<"input">, "size"> & VariantProps<typeof inputVariants>
+export type InputProps = Omit<React.ComponentProps<"input">, "size"> &
+	VariantProps<typeof inputVariants>
 
-export type InputAddonProps = React.ComponentProps<"div"> & VariantProps<typeof inputAddonVariants>
+export type InputAddonProps = React.ComponentProps<"div"> &
+	VariantProps<typeof inputAddonVariants>
 
-export type InputGroupProps = React.ComponentProps<"div"> & VariantProps<typeof inputGroupVariants>
+export type InputGroupProps = React.ComponentProps<"div"> &
+	VariantProps<typeof inputGroupVariants>
 
-export type InputWrapperProps = React.ComponentProps<"div"> & VariantProps<typeof inputWrapperVariants>
+export type InputWrapperProps = React.ComponentProps<"div"> &
+	VariantProps<typeof inputWrapperVariants>
 
 const inputVariants = cva(
 	`
@@ -27,8 +31,8 @@ const inputVariants = cva(
 				"32": "h-8 text-sm px-2 rounded-md file:pe-3 file:me-3",
 				"36": "h-9 text-sm px-2.5 rounded-lg file:pe-2.5 file:me-2.5",
 				"40": "h-10 text-sm px-3 rounded-lg file:pe-3 file:me-3",
-				"44": "h-11 text-base px-3 rounded-[10px] file:pe-3.5 file:me-3.5",
-				"48": "h-12 text-base px-3.5 rounded-[10px] file:pe-3.5 file:me-3.5",
+				"44": "h-11 text-base px-3 rounded-lg file:pe-3.5 file:me-3.5",
+				"48": "h-12 text-base px-3.5 rounded-lg file:pe-3.5 file:me-3.5",
 			},
 		},
 		defaultVariants: {
@@ -46,8 +50,8 @@ const inputAddonVariants = cva(
 				"32": "h-8 min-w-8 text-sm px-2  rounded-md [&_svg:not([class*=size-])]:size-4.5",
 				"36": "h-9 min-w-9 text-sm px-2.5 rounded-lg [&_svg:not([class*=size-])]:size-5",
 				"40": "h-10 min-w-10 text-sm px-3 rounded-lg [&_svg:not([class*=size-])]:size-5",
-				"44": "h-11 min-w-11 text-base px-3 rounded-[10px] [&_svg:not([class*=size-])]:size-5",
-				"48": "h-12 min-w-12 text-base px-3.5 rounded-[10px] [&_svg:not([class*=size-])]:size-5",
+				"44": "h-11 min-w-11 text-base px-3 rounded-lg [&_svg:not([class*=size-])]:size-5",
+				"48": "h-12 min-w-12 text-base px-3.5 rounded-lg [&_svg:not([class*=size-])]:size-5",
 			},
 			mode: {
 				default: "",
@@ -123,12 +127,12 @@ const inputWrapperVariants = cva(
 	{
 		variants: {
 			size: {
-				"28": "gap-1.5 [&_svg:not([class*=size-])]:size-4",
-				"32": "gap-2 [&_svg:not([class*=size-])]:size-4.5",
-				"36": "gap-2 [&_svg:not([class*=size-])]:size-5",
-				"40": "gap-2 [&_svg:not([class*=size-])]:size-5",
-				"44": "gap-2 [&_svg:not([class*=size-])]:size-5",
-				"48": "gap-2 [&_svg:not([class*=size-])]:size-5",
+				"28": "gap-1.5 h-7 [&_svg:not([class*=size-])]:size-4",
+				"32": "gap-2 h-8 [&_svg:not([class*=size-])]:size-4.5",
+				"36": "gap-2 h-9 [&_svg:not([class*=size-])]:size-5",
+				"40": "gap-2 h-10 [&_svg:not([class*=size-])]:size-5",
+				"44": "gap-2 h-11 [&_svg:not([class*=size-])]:size-5",
+				"48": "gap-2 h-12 [&_svg:not([class*=size-])]:size-5",
 			},
 			disabled: {
 				true: "cursor-not-allowed opacity-60 bg-fill1 has-[:focus-visible]:ring-0 has-[:focus-visible]:border-alpha [&_svg]:text-fg-tertiary",
@@ -143,27 +147,68 @@ const inputWrapperVariants = cva(
 )
 
 function Input({ className, type, size, ...props }: InputProps) {
-	return <input data-slot="input" type={type} className={cn(inputVariants({ size }), className)} {...props} />
+	return (
+		<input
+			data-slot="input"
+			type={type}
+			className={cn(inputVariants({ size }), className)}
+			{...props}
+		/>
+	)
 }
 
 Input.displayName = "Input"
 
 function InputAddon({ className, size, mode, ...props }: InputAddonProps) {
-	return <div data-slot="input-addon" className={cn(inputAddonVariants({ size, mode }), className)} {...props} />
+	return (
+		<div
+			data-slot="input-addon"
+			className={cn(inputAddonVariants({ size, mode }), className)}
+			{...props}
+		/>
+	)
 }
 
 InputAddon.displayName = "InputAddon"
 
 function InputGroup({ className, ...props }: InputGroupProps) {
-	return <div data-slot="input-group" className={cn(inputGroupVariants(), className)} {...props} />
+	return (
+		<div
+			data-slot="input-group"
+			className={cn(inputGroupVariants(), className)}
+			{...props}
+		/>
+	)
 }
 
 InputGroup.displayName = "InputGroup"
 
-function InputWrapper({ className, size, disabled, ...props }: InputWrapperProps) {
-	return <div data-slot="input-wrapper" className={cn(inputVariants({ size }), inputWrapperVariants({ size, disabled }), className)} {...props} />
+function InputWrapper({
+	className,
+	size,
+	disabled,
+	...props
+}: InputWrapperProps) {
+	return (
+		<div
+			data-slot="input-wrapper"
+			className={cn(
+				inputVariants({ size }),
+				inputWrapperVariants({ size, disabled }),
+				className
+			)}
+			{...props}
+		/>
+	)
 }
 
 InputWrapper.displayName = "InputWrapper"
 
-export { Input, InputAddon, InputGroup, InputWrapper, inputVariants, inputAddonVariants }
+export {
+	Input,
+	InputAddon,
+	InputGroup,
+	InputWrapper,
+	inputVariants,
+	inputAddonVariants,
+}

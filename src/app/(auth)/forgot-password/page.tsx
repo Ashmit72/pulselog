@@ -37,7 +37,7 @@ export default function Page() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setIsLoading(true);
     try {
-      const { data: result, error } = await authClient.requestPasswordReset({
+      const { error } = await authClient.requestPasswordReset({
         email: data.email.trim().toLowerCase(),
         redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`,
       });
@@ -48,8 +48,8 @@ export default function Page() {
         toast.success("Reset link sent! Check your email.");
         form.reset();
       }
-    } catch (err: any) {
-      toast.error(err?.message || "Something went wrong. Try again.");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Something went wrong. Try again.");
     } finally {
       setIsLoading(false);
     }
