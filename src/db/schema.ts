@@ -8,6 +8,9 @@ import {
   varchar,
   integer,
   jsonb,
+  pgEnum,
+  uniqueIndex,
+  check,
 } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
@@ -88,21 +91,43 @@ export const verification = pgTable('verification', {
    PULSELOG: CORE ENGINE
 ========================= */
 
+export const workspaceUseCase = pgEnum('workspace_use_case', [
+  'personal',
+  'team',
+  'company',
+]);
+
 export const workspace = pgTable(
   'workspace',
   {
     id: uuid('id').primaryKey().defaultRandom(),
     name: varchar('name', { length: 255 }).notNull(),
-    // Link the workspace to the user who created it
+    slug: varchar('slug', { length: 63 }).notNull(),
+    useCase: workspaceUseCase('use_case').notNull().default('team'),
     ownerId: text('owner_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => ({
     ownerIdx: index('workspace_owner_id_idx').on(table.ownerId),
+    ownerSlugUnique: uniqueIndex('workspace_owner_slug_unique').on(
+      table.ownerId,
+      table.slug,
+    ),
+    nameLengthCheck: check(
+      'workspace_name_length_check',
+      sql`char_length(${table.name}) between 2 and 60`,
+    ),
+    slugFormatCheck: check(
+      'workspace_slug_format_check',
+      sql`${table.slug} ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`,
+    ),
   })
 );
+
+export type WorkspaceUseCase = (typeof workspaceUseCase.enumValues)[number];
 
 export const apiKey = pgTable(
   'api_key',

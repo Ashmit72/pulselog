@@ -15,6 +15,13 @@
       "when": 1788191141653,
       "tag": "0001_big_sugar_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788274854396,
+      "tag": "0002_familiar_midnight",
+      "breakpoints": true
     }
   ]
 }

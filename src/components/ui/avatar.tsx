@@ -37,7 +37,7 @@ function useAvatarContext() {
 }
 
 const avatarVariants = cva(
-	"flex items-center font-semibold justify-center shrink-0 relative",
+	"relative isolate flex shrink-0 items-center justify-center font-semibold",
 	{
 		variants: {
 			size: {
@@ -76,7 +76,7 @@ const avatarVariants = cva(
 )
 
 const avatarStatusVariants = cva(
-	"absolute z-10 border-bg rounded-full box-content",
+	"absolute end-0 bottom-0 z-10 box-content rounded-full border-bg",
 	{
 		variants: {
 			variant: {
@@ -152,7 +152,7 @@ function AvatarImage({ className, ...props }: AvatarImageProps) {
 		<AvatarPrimitive.Image
 			data-slot="avatar-image"
 			className={cn(
-				"relative aspect-square size-full rounded-[inherit] object-cover",
+				"absolute inset-0 z-1 aspect-square size-full rounded-[inherit] object-cover",
 				className
 			)}
 			{...props}

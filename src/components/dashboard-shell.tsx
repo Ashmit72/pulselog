@@ -20,8 +20,6 @@ import {
 	X,
 } from "lucide-react"
 
-import { AnalyticsOverview } from "@/components/analytics-overview"
-import { LogStream } from "@/components/log-stream"
 import { ThemeToggler } from "@/components/theme-toggler"
 import { Button, IconButton } from "@/components/ui/button"
 import {
@@ -218,10 +216,6 @@ export function DashboardShell() {
 						</Button>
 					</div>
 
-					<div className="space-y-6">
-						<AnalyticsOverview />
-						<LogStream />
-					</div>
 				</main>
 			</div>
 		</div>
