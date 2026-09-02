@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild":"pnpm db:generate && pnpm db:migrate",
     "start": "next start",
     "lint": "eslint",
     "ui:add": "npx radianui@latest add",
