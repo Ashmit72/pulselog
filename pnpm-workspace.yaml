@@ -4,3 +4,5 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - electron-to-chromium
