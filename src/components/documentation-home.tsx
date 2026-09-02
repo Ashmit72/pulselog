@@ -45,7 +45,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const requestExample = `await fetch("http://localhost:3000/api/v1/ingest", {
+const requestExample = `await fetch("https://pulselog.ashmitbastola.com.np/api/v1/ingest", {
   method: "POST",
   headers: {
     "content-type": "application/json",

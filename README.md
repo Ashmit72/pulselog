@@ -2,7 +2,7 @@
 
 PulseLog is a lightweight, developer-focused API observability and error-tracking application. It accepts structured request events through an authenticated ingestion endpoint, stores them in Neon PostgreSQL, and presents request volume, p95 latency, errors, and searchable JSON metadata in a responsive dashboard.
 
-The public product and API documentation is available on the application homepage at [http://localhost:3000](http://localhost:3000).
+The live application and public API documentation are available at [https://pulselog.ashmitbastola.com.np](https://pulselog.ashmitbastola.com.np).
 
 ## What PulseLog includes
 
@@ -152,7 +152,7 @@ The API key determines the event's workspace. A client cannot provide or overrid
 
 ```bash
 curl --request POST \
-  --url http://localhost:3000/api/v1/ingest \
+  --url https://pulselog.ashmitbastola.com.np/api/v1/ingest \
   --header 'content-type: application/json' \
   --header 'x-api-key: pl_live_YOUR_API_KEY' \
   --data '{
@@ -357,14 +357,19 @@ pnpm build
 
 ## OAuth callback URLs
 
-For local development, configure:
+Configure these callback URLs for the deployed OAuth applications:
+
+```text
+https://pulselog.ashmitbastola.com.np/api/auth/callback/google
+https://pulselog.ashmitbastola.com.np/api/auth/callback/github
+```
+
+For separate local-development OAuth applications, use:
 
 ```text
 http://localhost:3000/api/auth/callback/google
 http://localhost:3000/api/auth/callback/github
 ```
-
-Replace the origin with the production value of `NEXT_PUBLIC_APP_URL` when deploying.
 
 ## Deployment checklist
 
@@ -377,6 +382,37 @@ Replace the origin with the production value of `NEXT_PUBLIC_APP_URL` when deplo
 7. Deploy to Vercel.
 8. Confirm the cleanup schedule in `vercel.json`.
 9. Create a disposable API key, submit one test event, verify Overview and Logs, then revoke the key if it is no longer needed.
+
+## Production verification and monitoring
+
+The following anonymous smoke checks verify the public surface without creating data:
+
+```bash
+# Homepage and TLS
+curl --fail --show-error --location --head \
+  https://pulselog.ashmitbastola.com.np/
+
+# An anonymous dashboard request must end at /signin
+curl --silent --show-error --location --output /dev/null \
+  --write-out '%{http_code} %{url_effective}\n' \
+  https://pulselog.ashmitbastola.com.np/dashboard
+
+# A request without an API key must return HTTP 401
+curl --silent --show-error --output /dev/null \
+  --write-out '%{http_code}\n' \
+  --request POST \
+  --header 'content-type: application/json' \
+  --data '{}' \
+  https://pulselog.ashmitbastola.com.np/api/v1/ingest
+```
+
+For an end-to-end release check, use a disposable account and workspace to verify this sequence: sign up or sign in, complete onboarding, create an API key, ingest one event, confirm it appears in Overview and Logs, open its detail inspector, and revoke the key.
+
+Useful free services:
+
+- [Google PageSpeed Insights](https://pagespeed.web.dev/) provides on-demand mobile and desktop performance, accessibility, best-practice, and SEO audits.
+- [UptimeRobot](https://uptimerobot.com/pricing/) can poll the public homepage and alert when it is unavailable; its free plan supports five-minute checks.
+- [Checkly](https://www.checklyhq.com/pricing/) is better suited to recurring API and browser workflow checks; its Hobby plan includes a limited number of free API and browser runs.
 
 ## Troubleshooting
 
