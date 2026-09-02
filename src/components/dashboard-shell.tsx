@@ -179,7 +179,7 @@ export function DashboardShell() {
 
 					<div className="ml-auto flex items-center gap-2">
 						<Button asChild variant="ghost" color="neutral" size="36" className="hidden sm:inline-flex">
-							<Link href="/docs">
+							<Link href="/#documentation">
 								<BookOpen />
 								Docs
 							</Link>

@@ -373,7 +373,7 @@ export function WorkspaceShell({
               Ingest healthy
             </Badge>
             <Button asChild variant="ghost" color="neutral" size="36" className="hidden md:inline-flex">
-              <Link href="/docs">
+              <Link href="/#documentation">
                 <BookOpen />
                 Docs
               </Link>

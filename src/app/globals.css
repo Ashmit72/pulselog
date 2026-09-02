@@ -13,6 +13,7 @@
 	--color-primary-border: oklch(0.6963 0.1724 298.93);
 	--color-primary-hover: oklch(0.6106 0.2219 295.95);
 	--color-primary-text: oklch(0.5554 0.2522 292.8);
+	--color-primary-fg: oklch(1 0 0);
 
 	/* success */
 	--color-success: oklch(0.6334 0.171 148.65);
@@ -315,4 +316,3 @@
 		/* Chrome, Safari and Opera */
 	}
 }
-
